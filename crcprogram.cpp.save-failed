@@ -1,0 +1,109 @@
+#include <iostream>
+#define SIZE 20
+
+using namespace std;
+
+class CRC{
+  int mess[SIZE], div[SIZE], temp[SIZE], rem[SIZE];
+  int rmes[SIZE], rdiv[SIZE], rtemp[SIZE], rrem[SIZE];
+  int msize, dsize, rsize;
+  int rmsize, rdsize, rrsize;
+public:
+  CRC(){
+    for (int i=0; i<SIZE; i++){
+      mess[i]=div[i]=temp[i]=rem[i]=-1;
+      rmes[i]=rdiv[i]=rtemp[i]=rrem[i]=-1;
+      msize=dsize=rsize=rmsize=rdsize=rrsize=0;
+    }
+  }
+  void getdata(){
+    cout<<"Enter size of message bit: ";
+    cin>>msize;
+
+    cout<<"Enter bit one by one: "<<endl;
+    for (int i=0; i<msize; i++){
+      cin>>mess[i];
+    }
+
+    cout<<"Enter size of divisor bit: ";
+    cin>>dsize;
+
+    cout<<"Enter bit one by one: "<<endl;
+    for (int i=0; i<dsize; i++){
+      cin>>div[i];
+    }
+  }
+  void display(){
+    cout<<"Entered message bit is "<<endl;
+    for(int i=0;i<msize;i++)
+      cout<<'\t'<<mess[i];
+
+    cout<<endl<<"Entered divisor bit is "<<endl;
+    for(int i=0;i<dsize;i++)
+    cout<<'\t'<<div[i];
+  }
+  void convert(){
+
+    //Appending 0s to the end of mess[] and incrementing msize
+    for(int i=0; i<dsize-1; i++){
+      mess[i+msize]=0;
+      msize+=1;
+    }
+
+    cout<<"New message bit is: "<<endl;
+    for(int i=0; i<msize; i++){
+      cout<<'\t'<<mess[i];
+    }
+
+    //Creating a temporary array to store the remainders alongside.
+    //Initialise it to the values of the message bits.
+    rsize=msize;
+    for(int i=0; i<msize; i++){
+      temp[i]=mess[i];
+    }
+
+    //Division:
+    for(int i=0; i<msize; i++){
+      int j=0;
+      int k=i;
+
+      if(temp[k]>=div[j]){
+        while(j<dsize){
+          if(temp[k]==div[j]){
+            temp[k]=0;
+          }
+          else{
+            temp[k]=1;
+          }
+          j++; k++;
+        }
+      }
+    }
+
+    for(int i=0; i<msize; i++){
+      mess[i]=mess[i]+temp[i];
+    }
+
+    //--------------------------------------------------------------------------
+
+    cout<<"CRC code generated here is: "<<endl;
+    for (int i=0; i<msize; i++){
+      cout<<mess[i];
+    }
+
+
+
+  }
+
+};
+
+int main()
+{
+CRC c;
+
+c.getdata();
+c.display();
+c.convert();
+
+return 0;
+}
